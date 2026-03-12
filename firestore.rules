@@ -1,0 +1,80 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: reviews
+// Document ID: reviewId (usually the store's review ID)
+// Fields:
+//   - id: string (required)
+//   - author: string
+//   - content: string (required)
+//   - rating: number (required)
+//   - date: string (required)
+//   - sentiment: string (positive/neutral/negative)
+//   - summary: string
+//   - store: string (required)
+//   - appId: string
+//   - createdAt: string
+//
+// Collection: users
+// Document ID: userId (Firebase Auth UID)
+// Fields:
+//   - uid: string (required)
+//   - email: string (required)
+//   - displayName: string
+//   - photoURL: string
+//   - lastLogin: string
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidReview(data) {
+      return data.id is string &&
+             data.content is string && data.content.size() > 0 && data.content.size() < 10000 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.date is string &&
+             data.store is string;
+    }
+
+    function isValidUser(data) {
+      return data.uid is string && data.uid == request.auth.uid &&
+             data.email is string && data.email.size() > 0;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /reviews/{reviewId} {
+      // Allow authenticated users to read reviews
+      allow read: if isAuthenticated();
+      
+      // Allow authenticated users to create/update reviews (for the sync process)
+      allow create: if isAuthenticated() && isValidReview(request.resource.data);
+      allow update: if isAuthenticated() && isValidReview(request.resource.data);
+      
+      // Deny delete for now
+      allow delete: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+    }
+  }
+}

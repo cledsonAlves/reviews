@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "A verbatim review from an app store.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the review." },
+        "author": { "type": "string", "description": "Name of the reviewer." },
+        "content": { "type": "string", "description": "The text content of the review." },
+        "rating": { "type": "number", "description": "Star rating (1-5)." },
+        "date": { "type": "string", "format": "date-time", "description": "When the review was posted." },
+        "sentiment": { "type": "string", "enum": ["positive", "neutral", "negative"], "description": "AI-analyzed sentiment." },
+        "summary": { "type": "string", "description": "AI-generated summary of the review." },
+        "store": { "type": "string", "description": "Source store (e.g., google_play)." },
+        "appId": { "type": "string", "description": "ID of the app being reviewed." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When this record was saved to our DB." }
+      },
+      "required": ["id", "content", "rating", "date", "store"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Application user profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "lastLogin": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of app reviews."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles."
+    }
+  }
+}
