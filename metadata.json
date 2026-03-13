@@ -1,5 +1,0 @@
-{
-  "name": "Itaú Verbatins",
-  "description": "Dashboard de análise de verbatims lojas para o app Itaú, com análise de sentimento via Gemini e persistência em Firestore.",
-  "requestFramePermissions": []
-}
