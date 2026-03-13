@@ -1,5 +1,5 @@
 {
-  "name": "Itaú Investimentos Dashboard",
-  "description": "Dashboard de análise de verbatims para o app Itaú Investimentos, com análise de sentimento via Gemini e persistência em Firestore.",
+  "name": "Itaú Verbatins",
+  "description": "Dashboard de análise de verbatims lojas para o app Itaú, com análise de sentimento via Gemini e persistência em Firestore.",
   "requestFramePermissions": []
 }

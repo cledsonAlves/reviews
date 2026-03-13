@@ -13,6 +13,7 @@
 //   - sentiment: string (positive/neutral/negative)
 //   - summary: string
 //   - store: string (required)
+//   - version: string
 //   - appId: string
 //   - createdAt: string
 //
@@ -75,6 +76,11 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isOwner(userId) && isValidUser(request.resource.data);
       allow update: if isOwner(userId) && isValidUser(request.resource.data);
+    }
+
+    match /metadata/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
     }
   }
 }
